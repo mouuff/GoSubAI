@@ -55,5 +55,5 @@ func (g *SubtitleGenerator) Generate() (*types.SubtitleData, error) {
 		}
 	}
 
-	return g.SubstitleData, nil
+	return resultSubtitleData, nil
 }
