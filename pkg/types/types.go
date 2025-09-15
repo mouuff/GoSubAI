@@ -12,3 +12,11 @@ type SubtitleEntry struct {
 type SubtitleData struct {
 	Entries []SubtitleEntry
 }
+
+type SubtitleParser interface {
+	Read(inputFile string) (*SubtitleData, error)
+}
+
+type SubtitleWriter interface {
+	Write(outputFile string, subtitleData *SubtitleData) error
+}
