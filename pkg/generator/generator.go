@@ -47,10 +47,11 @@ func (g *SubtitleGenerator) Generate() (*types.SubtitleData, error) {
 		})
 
 		if g.Debug {
-			fmt.Printf("Index: %d\n", entry.Index)
-			fmt.Printf("Prompt: %s\n", prompt)
-			fmt.Printf("Response: %s\n", response)
-			fmt.Printf("ResultText: %s\n", resultText)
+			fmt.Printf("Index:\n%d\n", entry.Index)
+			fmt.Printf("Prompt:\n%s\n", prompt)
+			fmt.Printf("Response:\n%s\n", response)
+			fmt.Printf("ResultText:\n%s\n", resultText)
+			fmt.Printf("************************\n")
 		}
 	}
 
