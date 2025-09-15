@@ -35,7 +35,7 @@ func TestParseSrtFile(t *testing.T) {
 				Index: 2,
 				Start: 4000 * time.Millisecond,
 				End:   8360 * time.Millisecond,
-				Text:  "Ja, han falt på sykkel og brakk armen.",
+				Text:  "Som igjen vil føre til at alt blirbilligere i velferdsstaten Norge.\n----\nOnce again, I will make everything cheaper in the welfare state Norway.",
 			},
 		},
 	}
@@ -55,7 +55,7 @@ func TestParseSrtFile(t *testing.T) {
 
 	content := string(contentRaw)
 
-	expectedContent := "1\n00:00:01,760 --> 00:00:04,000\nJeg så for øvrig Bjørnar\nhadde vært uheldig.\n\n2\n00:00:04,000 --> 00:00:08,360\nJa, han falt på sykkel og brakk armen.\n\n"
+	expectedContent := "1\n00:00:01,760 --> 00:00:04,000\nJeg så for øvrig Bjørnar\nhadde vært uheldig.\n\n2\n00:00:04,000 --> 00:00:08,360\nSom igjen vil føre til at alt blirbilligere i velferdsstaten Norge.\n----\nOnce again, I will make everything cheaper in the welfare state Norway.\n\n"
 	if content != expectedContent {
 		t.Errorf("Unexpected SRT file content:\n%s", string(content))
 	}
