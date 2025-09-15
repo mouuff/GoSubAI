@@ -13,7 +13,7 @@ type SrtWriter struct {
 
 func (p *SrtWriter) Write(outputFile string, subtitleData *types.SubtitleData) error {
 
-	file, err := os.Open(outputFile)
+	file, err := os.Create(outputFile)
 
 	if err != nil {
 		return fmt.Errorf("failed to open file: %w", err)
