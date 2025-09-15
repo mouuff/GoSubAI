@@ -11,13 +11,15 @@ import (
 type SrtParser struct {
 }
 
-func (p *SrtParser) Parse(input string) (*types.SubtitleData, error) {
+func (p *SrtParser) Parse(inputFile string) (*types.SubtitleData, error) {
 
-	file, err := os.Open(input)
+	file, err := os.Open(inputFile)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to open file: %w", err)
 	}
+
+	defer file.Close()
 
 	scanner := gosrt.NewScanner(file)
 
