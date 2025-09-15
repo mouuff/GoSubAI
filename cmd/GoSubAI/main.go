@@ -20,7 +20,7 @@ type SubCommand interface {
 func RunSubCommand(args []string) error {
 
 	cmds := []SubCommand{
-		&EnrichCmd{},
+		&GenerateCmd{},
 	}
 
 	if len(args) < 1 {

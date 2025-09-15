@@ -17,7 +17,6 @@ type SubtitleGenerator struct {
 	SubstitleData *types.SubtitleData
 	PropertyName  string
 	Prompt        string
-	Model         string
 	Template      string
 	Debug         bool
 }

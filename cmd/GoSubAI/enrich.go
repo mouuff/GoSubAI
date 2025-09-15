@@ -10,9 +10,17 @@ import (
 	"github.com/mouuff/GoSubAI/pkg/brain"
 )
 
+type GeneratorConfig struct {
+	Model        string
+	PropertyName string
+	Prompt       string
+	Template     string
+	Debug        bool
+}
+
 // Ms describes the generate-trend subcommand
 // This command is used to generate trend
-type EnrichCmd struct {
+type GenerateCmd struct {
 	flagSet *flag.FlagSet
 
 	config   string
@@ -20,12 +28,12 @@ type EnrichCmd struct {
 }
 
 // Name gets the name of the command
-func (cmd *EnrichCmd) Name() string {
-	return "enrich"
+func (cmd *GenerateCmd) Name() string {
+	return "generate"
 }
 
 // Init initializes the command
-func (cmd *EnrichCmd) Init(args []string) error {
+func (cmd *GenerateCmd) Init(args []string) error {
 	cmd.flagSet = flag.NewFlagSet(cmd.Name(), flag.ExitOnError)
 	cmd.flagSet.StringVar(&cmd.config, "config", "", "configuration file (required)")
 	cmd.flagSet.StringVar(&cmd.datafile, "datafile", "", "file used to load and store data (required)")
@@ -33,7 +41,7 @@ func (cmd *EnrichCmd) Init(args []string) error {
 }
 
 // Run runs the command
-func (cmd *EnrichCmd) Run() error {
+func (cmd *GenerateCmd) Run() error {
 	log.Println("Enriching subtitles...")
 
 	if cmd.config == "" {
@@ -53,7 +61,7 @@ func (cmd *EnrichCmd) Run() error {
 	}
 
 	fmt.Println("Loading configuration from", cmd.config)
-	fmt.Println("Enriching", cmd.datafile)
+	fmt.Println("Generating", cmd.datafile)
 
 	r, err := brain.GenerateString(context.Background(), "translated_text", "Translate this to norwegian: This is an example prompt")
 
