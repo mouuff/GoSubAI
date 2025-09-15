@@ -1,8 +1,6 @@
 package parser_test
 
 import (
-	"fmt"
-	"os"
 	"path/filepath"
 	"testing"
 
@@ -11,18 +9,11 @@ import (
 
 func TestParseSrtFile(t *testing.T) {
 
-	testSrt := filepath.Join("testdata", "subtitles_1.srt")
-
-	b, err := os.ReadFile(testSrt)
-	if err != nil {
-		fmt.Print(err)
-	}
-
-	str := string(b) // convert content to a 'string'
+	testSrtFile := filepath.Join("testdata", "subtitles_1.srt")
 
 	parser := parser.SrtParser{}
 
-	subtitleData, err := parser.Parse(str)
+	subtitleData, err := parser.Parse(testSrtFile)
 
 	if err != nil {
 		t.Errorf("Failed to parse SRT file: %v", err)

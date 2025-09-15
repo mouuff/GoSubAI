@@ -3,57 +3,36 @@ package parser
 import (
 	"fmt"
 	"os"
-	"regexp"
-	"strconv"
-	"strings"
-	"time"
 
 	"github.com/mouuff/GoSubAI/pkg/types"
+	"github.com/plunch/gosrt"
 )
 
 type SrtParser struct {
 }
 
-// Defines a block in an SRT file
-type Block struct {
-	Index int
-	Text  string
-}
-
-var timePattern = regexp.MustCompile(`(\d{2}):(\d{2}):(\d{2}),(\d{3})`)
-
-func parseTimecode(tc string) (int, error) {
-	m := timePattern.FindStringSubmatch(tc)
-	if m == nil {
-		return 0, fmt.Errorf("invalid timecode: %s", tc)
-	}
-	h, _ := strconv.Atoi(m[1])
-	min, _ := strconv.Atoi(m[2])
-	sec, _ := strconv.Atoi(m[3])
-	ms, _ := strconv.Atoi(m[4])
-	return ((h*3600 + min*60 + sec) * 1000) + ms, nil
-}
-
 func (p *SrtParser) Parse(input string) (*types.SubtitleData, error) {
 
-	rawContent, err := os.ReadFile(input)
+	file, err := os.Open(input)
+
 	if err != nil {
-		fmt.Print(err)
+		return nil, fmt.Errorf("failed to open file: %w", err)
 	}
 
-	stringContent := string(rawContent) // convert content to a 'string'
-	for _, line := range strings.Split(strings.TrimSuffix(stringContent, "\n"), "\n") {
-		fmt.Println(line)
+	scanner := gosrt.NewScanner(file)
+
+	subtitleData := &types.SubtitleData{
+		Entries: []types.SubtitleEntry{},
 	}
 
-	// The first split part is empty (before the first number)
-	for i, part := range parts[1:] {
+	for scanner.Scan() {
+		sub := scanner.Subtitle()
 
 		subtitleData.Entries = append(subtitleData.Entries, types.SubtitleEntry{
-			Index: index,
-			Start: time.Duration(startTime) * time.Millisecond,
-			End:   time.Duration(endTime) * time.Millisecond,
-			Text:  text,
+			Index: sub.Number,
+			Start: sub.Start,
+			End:   sub.End,
+			Text:  sub.Text,
 		})
 	}
 
