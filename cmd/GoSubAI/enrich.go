@@ -1,10 +1,13 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"flag"
 	"fmt"
 	"log"
+
+	"github.com/mouuff/GoSubAI/pkg/brain"
 )
 
 // Ms describes the generate-trend subcommand
@@ -43,7 +46,21 @@ func (cmd *EnrichCmd) Run() error {
 		return errors.New("-datafile parameter required")
 	}
 
+	brain, err := brain.NewOllamaBrain("mistral")
+
+	if err != nil {
+		return fmt.Errorf("failed to create brain: %v", err)
+	}
+
 	fmt.Println("Loading configuration from", cmd.config)
 	fmt.Println("Enriching", cmd.datafile)
+
+	r, err := brain.GenerateString(context.Background(), "translated_text", "Translate this to norwegian: This is an example prompt")
+
+	if err != nil {
+		return fmt.Errorf("failed to generate: %v", err)
+	}
+
+	fmt.Println(r)
 	return nil
 }
