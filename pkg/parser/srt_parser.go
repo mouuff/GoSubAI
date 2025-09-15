@@ -10,7 +10,7 @@ import (
 	"github.com/mouuff/GoSubAI/pkg/types"
 )
 
-type SRTParser struct {
+type SrtParser struct {
 }
 
 // Defines a block in an SRT file
@@ -53,7 +53,7 @@ func parseBlocks(input string) ([]Block, error) {
 	return blocks, nil
 }
 
-func (p *SRTParser) Parse(input string) (*types.SubtitleData, error) {
+func (p *SrtParser) Parse(input string) (*types.SubtitleData, error) {
 	blocks, err := parseBlocks(input)
 	if err != nil {
 		return nil, err
