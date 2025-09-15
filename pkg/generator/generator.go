@@ -12,7 +12,7 @@ import (
 type GenerationType int32
 
 type SubtitleGenerator struct {
-	context       context.Context
+	Context       context.Context
 	Brain         *brain.OllamaBrain
 	SubstitleData *types.SubtitleData
 	PropertyName  string
@@ -28,14 +28,14 @@ func (g *SubtitleGenerator) Generate() (*types.SubtitleData, error) {
 
 	for _, entry := range g.SubstitleData.Entries {
 		prompt := strings.Replace(g.Prompt, "{TEXT}", entry.Text, 1)
-		response, err := g.Brain.GenerateString(g.context, g.PropertyName, prompt)
+		response, err := g.Brain.GenerateString(g.Context, g.PropertyName, prompt)
 
 		if err != nil {
 			return nil, err
 		}
 
 		resultText := g.Template
-		resultText = strings.Replace(resultText, "{ORIGINAL_TEXT}", entry.Text, 1)
+		resultText = strings.Replace(resultText, "{TEXT}", entry.Text, 1)
 		resultText = strings.Replace(resultText, "{GENERATED_TEXT}", response, 1)
 		resultText = strings.Replace(resultText, "{PROMPT}", prompt, 1) // For debugging
 
