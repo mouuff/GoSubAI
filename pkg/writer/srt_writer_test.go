@@ -44,4 +44,19 @@ func TestParseSrtFile(t *testing.T) {
 	if err != nil {
 		t.Errorf("Failed to write SRT file: %v", err)
 	}
+
+	os.ReadFile(tmpDest)
+
+	contentRaw, err := os.ReadFile(tmpDest)
+
+	if err != nil {
+		t.Errorf("Failed to read written SRT file: %v", err)
+	}
+
+	content := string(contentRaw)
+
+	expectedContent := "1\n00:00:01,760 --> 00:00:04,000\nJeg så for øvrig Bjørnar\nhadde vært uheldig.\n\n2\n00:00:04,000 --> 00:00:08,360\nJa, han falt på sykkel og brakk armen.\n\n"
+	if content != expectedContent {
+		t.Errorf("Unexpected SRT file content:\n%s", string(content))
+	}
 }
