@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/mouuff/GoSubAI/pkg/types"
 )
@@ -35,7 +36,7 @@ func parseTimecode(tc string) (int, error) {
 
 func parseBlocks(input string) ([]Block, error) {
 	// Regex: a number at start of line, then everything until next number or end of text
-	re := regexp.MustCompile(`(?m)^(\d+)\s*\n([\s\S]*?)(?=^\d+|\z)`)
+	re := regexp.MustCompile(`(?ms)^(\d+)\n(.*?)(?:\n(?=\d+\n)|\z)`)
 	matches := re.FindAllStringSubmatch(input, -1)
 
 	var blocks []Block
@@ -54,44 +55,54 @@ func parseBlocks(input string) ([]Block, error) {
 }
 
 func (p *SrtParser) Parse(input string) (*types.SubtitleData, error) {
-	blocks, err := parseBlocks(input)
-	if err != nil {
-		return nil, err
-	}
-
 	subtitleData := &types.SubtitleData{
 		Entries: []types.SubtitleEntry{},
 	}
 
-	for _, block := range blocks {
-		lines := strings.SplitN(block.Text, "\n", 2)
+	// Regex to find all the numbers at the start of lines
+	reNumber := regexp.MustCompile(`(?m)^\d+$`)
+	numbers := reNumber.FindAllString(input, -1)
+
+	// Split the input on lines that are just numbers
+	reSplit := regexp.MustCompile(`(?m)^\d+$`)
+	parts := reSplit.Split(input, -1)
+
+	// The first split part is empty (before the first number)
+	for i, part := range parts[1:] {
+		index, err := strconv.Atoi(numbers[i])
+		if err != nil {
+			log.Println("Skipping block with invalid index:", numbers[i], err)
+			continue
+		}
+		content := strings.TrimSpace(part)
+		lines := strings.SplitN(content, "\n", 2)
 		if len(lines) < 2 {
-			log.Println("Skipping block with insufficient lines:", block.Index)
+			log.Println("Skipping block with insufficient lines:", index)
 			continue
 		}
 
 		text := strings.TrimSpace(lines[1])
 		timeParts := strings.SplitN(lines[0], " --> ", 2)
 		if len(timeParts) != 2 {
-			log.Println("Skipping block with invalid time format:", block.Index)
+			log.Println("Skipping block with invalid time format:", index)
 			continue
 		}
 		startTime, err := parseTimecode(strings.TrimSpace(timeParts[0]))
 		if err != nil {
-			log.Println("Skipping block with invalid start time:", block.Index, err)
+			log.Println("Skipping block with invalid start time:", index, err)
 			continue
 		}
 		endTime, err := parseTimecode(strings.TrimSpace(timeParts[1]))
 		if err != nil {
-			log.Println("Skipping block with invalid end time:", block.Index, err)
+			log.Println("Skipping block with invalid end time:", index, err)
 			continue
 		}
 
 		subtitleData.Entries = append(subtitleData.Entries, types.SubtitleEntry{
-			Index:     block.Index,
-			StartTime: startTime,
-			EndTime:   endTime,
-			Text:      text,
+			Index: index,
+			Start: time.Duration(startTime) * time.Millisecond,
+			End:   time.Duration(endTime) * time.Millisecond,
+			Text:  text,
 		})
 	}
 

@@ -1,10 +1,12 @@
 package types
 
+import "time"
+
 type SubtitleEntry struct {
-	Index     int
-	StartTime int
-	EndTime   int
-	Text      string
+	Index int
+	Start time.Duration
+	End   time.Duration
+	Text  string
 }
 
 type SubtitleData struct {
