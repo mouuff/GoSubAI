@@ -1,0 +1,7 @@
+{
+  "Model": "mistral",
+  "PropertyName": "translated_text",
+  "Prompt": "Translate this to english: '{TEXT}'",
+  "Template": "{TEXT}\n{GENERATED_TEXT}",
+  "Debug": true
+}
