@@ -36,7 +36,6 @@ func (g *SubtitleGenerator) Generate() (*types.SubtitleData, error) {
 		resultText := g.Template
 		resultText = strings.Replace(resultText, "{TEXT}", entry.Text, 1)
 		resultText = strings.Replace(resultText, "{GENERATED_TEXT}", response, 1)
-		resultText = strings.Replace(resultText, "{PROMPT}", prompt, 1) // For debugging
 
 		resultSubtitleData.Entries = append(resultSubtitleData.Entries, types.SubtitleEntry{
 			Index: entry.Index,
