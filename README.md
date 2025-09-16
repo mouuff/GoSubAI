@@ -58,6 +58,9 @@ go clean -testcache; go test ./...
 ```
 
 ## Example configuration
+
+The following configuration will include the original text as well as the translated text:
+
 ```json
 {
   "Model": "mistral",
@@ -67,3 +70,16 @@ go clean -testcache; go test ./...
 }
 ```
 
+If you only want to include the translation you can change the `Template` to `"Template": "{GENERATED_TEXT}"`.
+
+For some subtitles, it can be useful to include context from the previous line.
+Here’s an example configuration that does this:
+
+```json
+{
+  "Model": "deepseek-r1:8b",
+  "PropertyName": "translated_text",
+  "Prompt": "Consider the previous text for context ONLY: '{PREVIOUS_TEXT} {TEXT}'. Translate this to english and keep it short, and don't include the context in your response: '{TEXT}'",
+  "Template": "{GENERATED_TEXT}"
+}
+```
