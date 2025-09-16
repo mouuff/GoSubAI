@@ -30,6 +30,7 @@ type GenerateCmd struct {
 
 	config string
 	input  string
+	output string
 }
 
 // Name gets the name of the command
@@ -42,6 +43,7 @@ func (cmd *GenerateCmd) Init(args []string) error {
 	cmd.flagSet = flag.NewFlagSet(cmd.Name(), flag.ExitOnError)
 	cmd.flagSet.StringVar(&cmd.config, "config", "", "configuration file (required)")
 	cmd.flagSet.StringVar(&cmd.input, "input", "", "file used to load SRT data (required)")
+	cmd.flagSet.StringVar(&cmd.output, "output", "", "file used to write SRT data")
 	return cmd.flagSet.Parse(args)
 }
 
@@ -56,6 +58,11 @@ func (cmd *GenerateCmd) Run() error {
 	if cmd.input == "" {
 		log.Println("Please specify a data file using -input (e.g. -input data.srt)")
 		return errors.New("-input parameter required")
+	}
+
+	if cmd.output == "" {
+		cmd.output = internal.AddPrefixToFilename(cmd.input, "_generated")
+		log.Printf("No '-output' file specified, using default: %s\n", cmd.output)
 	}
 
 	var config GeneratorConfig
@@ -93,7 +100,7 @@ func (cmd *GenerateCmd) Run() error {
 		return err
 	}
 
-	return writer.Write("output.srt", result)
+	return writer.Write(cmd.output, result)
 }
 
 func printConfigurationTemplate() {

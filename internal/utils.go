@@ -17,3 +17,14 @@ func ReadFromJson(path string, dataOut interface{}) error {
 
 	return nil
 }
+
+func AddPrefixToFilename(filename, prefix string) string {
+	extIdx := len(filename)
+	for i := len(filename) - 1; i >= 0; i-- {
+		if filename[i] == '.' {
+			extIdx = i
+			break
+		}
+	}
+	return filename[:extIdx] + prefix + filename[extIdx:]
+}
