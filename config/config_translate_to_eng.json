@@ -1,7 +1,7 @@
 {
   "Model": "mistral",
   "PropertyName": "translated_text",
-  "Prompt": "Translate this to english: '{TEXT}'",
+  "Prompt": "Translate this to english and keep it short: '{TEXT}'",
   "Template": "{TEXT}\n----\n{GENERATED_TEXT}",
   "Debug": true
 }

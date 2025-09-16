@@ -25,6 +25,8 @@ func (g *SubtitleGenerator) Generate() (*types.SubtitleData, error) {
 		Entries: []types.SubtitleEntry{},
 	}
 
+	total := len(g.SubstitleData.Entries)
+
 	for _, entry := range g.SubstitleData.Entries {
 		prompt := strings.Replace(g.Prompt, "{TEXT}", entry.Text, 1)
 		response, err := g.Brain.GenerateString(g.Context, g.PropertyName, prompt)
@@ -32,6 +34,10 @@ func (g *SubtitleGenerator) Generate() (*types.SubtitleData, error) {
 		if err != nil {
 			return nil, err
 		}
+
+		response = strings.TrimSpace(response)
+		response = strings.Trim(response, "\"")
+		response = strings.Trim(response, "'")
 
 		resultText := g.Template
 		resultText = strings.Replace(resultText, "{TEXT}", entry.Text, 1)
@@ -45,7 +51,7 @@ func (g *SubtitleGenerator) Generate() (*types.SubtitleData, error) {
 		})
 
 		if g.Debug {
-			fmt.Printf("Index:\n%d\n", entry.Index)
+			fmt.Printf("Index: %d / %d\n", entry.Index, total)
 			fmt.Printf("Prompt:\n%s\n", prompt)
 			fmt.Printf("Response:\n%s\n", response)
 			fmt.Printf("ResultText:\n%s\n", resultText)
