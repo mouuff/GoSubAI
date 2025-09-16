@@ -46,8 +46,7 @@ Additionally, provide a SubRip (SRT) file containing the subtitles.
 Example:
 
 ```sh
-cd GoSubAI
-go run ./cmd/GoSubAI generate -config ./config/config_translate_to_eng.json -input ./data/HVOR_BLIR_DET_AV_PENGA.srt
+go run ./cmd/GoSubAI generate -config ./config/translate_to_eng.json -input ./data/HVOR_BLIR_DET_AV_PENGA.srt
 ```
 
 ### Run Unit Tests
