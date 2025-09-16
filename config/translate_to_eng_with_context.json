@@ -1,0 +1,7 @@
+{
+  "Model": "deepseek-r1:8b",
+  "PropertyName": "translated_text",
+  "Prompt": "Consider the previous text for context ONLY: '{PREVIOUS_TEXT} {TEXT}'. Translate this to english and keep it short, and don't include the context in your response: '{TEXT}'",
+  "Template": "{TEXT}\n----\n{GENERATED_TEXT}",
+  "Debug": true
+}
