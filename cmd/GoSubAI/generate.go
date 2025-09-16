@@ -42,8 +42,8 @@ func (cmd *GenerateCmd) Name() string {
 func (cmd *GenerateCmd) Init(args []string) error {
 	cmd.flagSet = flag.NewFlagSet(cmd.Name(), flag.ExitOnError)
 	cmd.flagSet.StringVar(&cmd.config, "config", "", "configuration file (required)")
-	cmd.flagSet.StringVar(&cmd.input, "input", "", "file used to load SRT data (required)")
-	cmd.flagSet.StringVar(&cmd.output, "output", "", "file used to write SRT data")
+	cmd.flagSet.StringVar(&cmd.input, "input", "", "path to the subtitles file (SRT) (required)")
+	cmd.flagSet.StringVar(&cmd.output, "output", "", "path to the output subtitles file (SRT)")
 	return cmd.flagSet.Parse(args)
 }
 
@@ -62,7 +62,7 @@ func (cmd *GenerateCmd) Run() error {
 
 	if cmd.output == "" {
 		cmd.output = internal.AddPrefixToFilename(cmd.input, "_generated")
-		log.Printf("No '-output' file specified, using default: %s\n", cmd.output)
+		log.Printf("No output file specified, using default: %s\n", cmd.output)
 	}
 
 	var config GeneratorConfig
