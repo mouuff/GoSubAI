@@ -1,6 +1,9 @@
 package types
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 type SubtitleEntry struct {
 	Index int
@@ -19,4 +22,8 @@ type SubtitleParser interface {
 
 type SubtitleWriter interface {
 	Write(outputFile string, subtitleData *SubtitleData) error
+}
+
+type Brain interface {
+	GenerateString(ctx context.Context, propertyName, prompt string) (string, error)
 }

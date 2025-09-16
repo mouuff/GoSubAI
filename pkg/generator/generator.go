@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mouuff/GoSubAI/pkg/brain"
 	"github.com/mouuff/GoSubAI/pkg/types"
 )
 
@@ -13,7 +12,7 @@ type GenerationType int32
 
 type SubtitleGenerator struct {
 	Context       context.Context
-	Brain         *brain.OllamaBrain
+	Brain         types.Brain
 	SubstitleData *types.SubtitleData
 	PropertyName  string
 	Prompt        string
