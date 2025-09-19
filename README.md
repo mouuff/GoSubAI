@@ -1,10 +1,12 @@
 
 # GoSubAI
-GoSubAI is a subtitle translator powered by AI and written in Go.
+GoSubAI is an AI-powered subtitle translator built in Go.
 
-It lets you define custom prompts and behaviors to run an LLM model on subtitle files.
+You can define custom prompts, select the output format, and choose which LLM to run it on.
+It even lets you adjust the color scheme and display both the original and translated subtitles side by side.
 
-I created this project as a language-learning aid-being able to customize prompts helps me get the most out of the translations. For example, I can ask the AI for more literal translations, or display both the original and translated text side by side.
+I originally built it as a tool for language learning-customizable prompts make it easy to guide the translation style.
+For instance, you can ask for more literal translations.
 
 ### Features:
 - **Configurable Automation**: Define your own prompts to process subtitles.
