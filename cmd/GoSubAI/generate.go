@@ -12,16 +12,9 @@ import (
 	"github.com/mouuff/GoSubAI/pkg/brain"
 	"github.com/mouuff/GoSubAI/pkg/generator"
 	"github.com/mouuff/GoSubAI/pkg/parser"
+	"github.com/mouuff/GoSubAI/pkg/types"
 	"github.com/mouuff/GoSubAI/pkg/writer"
 )
-
-type GeneratorConfig struct {
-	Model        string
-	PropertyName string
-	Prompt       string
-	Template     string
-	Debug        bool
-}
 
 // Ms describes the generate-trend subcommand
 // This command is used to generate trend
@@ -65,7 +58,7 @@ func (cmd *GenerateCmd) Run() error {
 		log.Printf("No output file specified, using default: %s\n", cmd.output)
 	}
 
-	var config GeneratorConfig
+	var config types.GeneratorConfig
 	err := internal.ReadFromJson(cmd.config, &config)
 	if err != nil {
 		return err
@@ -79,7 +72,7 @@ func (cmd *GenerateCmd) Run() error {
 		return fmt.Errorf("failed to read subtitle data: %v", err)
 	}
 
-	brain, err := brain.NewOllamaBrain("mistral")
+	brain, err := brain.NewOllamaBrain(config.HostUrl)
 
 	if err != nil {
 		return fmt.Errorf("failed to create brain: %v", err)
@@ -88,11 +81,8 @@ func (cmd *GenerateCmd) Run() error {
 	generator := &generator.SubtitleGenerator{
 		Context:       context.Background(),
 		Brain:         brain,
-		PropertyName:  config.PropertyName,
-		Prompt:        config.Prompt,
-		Template:      config.Template,
-		Debug:         config.Debug,
 		SubstitleData: subtitleData,
+		Config:        &config,
 	}
 
 	result, err := generator.Generate()
@@ -104,9 +94,10 @@ func (cmd *GenerateCmd) Run() error {
 }
 
 func printConfigurationTemplate() {
-	configTemplate := &GeneratorConfig{
+	configTemplate := &types.GeneratorConfig{
 		Model:        "mistral",
 		PropertyName: "translated_text",
+		SystemPrompt: "You are a subtitle translation assistant. Your only task is to translate subtitles into the target language specified by the user. Subtitles may contain incomplete sentences-when that happens, translate them literally without trying to complete or alter their meaning. Always keep the translation faithful to the original text and do not add explanations or extra words.",
 		Prompt:       "Translate this to english: '{TEXT}'",
 		Template:     "{TEXT}\n{GENERATED_TEXT}",
 		Debug:        false,

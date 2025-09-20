@@ -11,7 +11,7 @@ import (
 
 type MockBrain struct{}
 
-func (mb *MockBrain) GenerateString(ctx context.Context, propertyName, prompt string) (string, error) {
+func (mb *MockBrain) GenerateString(ctx context.Context, r *types.PromptRequest) (string, error) {
 	// Simple mock implementation that just returns a fixed string for testing
 	return "This is a translated text.", nil
 }
@@ -39,9 +39,12 @@ func TestGenerate(t *testing.T) {
 		Brain:         &MockBrain{},
 		Context:       context.Background(),
 		SubstitleData: subtitleData,
-		PropertyName:  "translated_text",
-		Prompt:        "Translate this to english: '{TEXT}'",
-		Template:      "{TEXT}\n----\n{GENERATED_TEXT}",
+		Config: &types.GeneratorConfig{
+			PropertyName: "translated_text",
+			SystemPrompt: "You are a translation assistant. Your only task is to translate any input text into clear and natural English. Do not add explanations, comments, or extra details—only provide the translation.",
+			Prompt:       "Translate this to english: '{TEXT}'",
+			Template:     "{TEXT}\n----\n{GENERATED_TEXT}",
+		},
 	}
 
 	result, err := g.Generate()

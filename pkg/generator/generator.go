@@ -14,10 +14,7 @@ type SubtitleGenerator struct {
 	Context       context.Context
 	Brain         types.Brain
 	SubstitleData *types.SubtitleData
-	PropertyName  string
-	Prompt        string
-	Template      string
-	Debug         bool
+	Config        *types.GeneratorConfig
 }
 
 func (g *SubtitleGenerator) Generate() (*types.SubtitleData, error) {
@@ -29,14 +26,21 @@ func (g *SubtitleGenerator) Generate() (*types.SubtitleData, error) {
 	var previousText string
 
 	for _, entry := range g.SubstitleData.Entries {
-		prompt := strings.ReplaceAll(g.Prompt, "{TEXT}", entry.Text)
+		prompt := strings.ReplaceAll(g.Config.Prompt, "{TEXT}", entry.Text)
 
 		if previousText != "" {
 			// Can be used to provide context from previous subtitle for better translations
 			prompt = strings.ReplaceAll(prompt, "{PREVIOUS_TEXT}", previousText)
 		}
 
-		response, err := g.Brain.GenerateString(g.Context, g.PropertyName, prompt)
+		r := &types.PromptRequest{
+			PropertyName: g.Config.PropertyName,
+			SystemPrompt: g.Config.SystemPrompt,
+			Model:        g.Config.Model,
+			Prompt:       prompt,
+		}
+
+		response, err := g.Brain.GenerateString(g.Context, r)
 
 		if err != nil {
 			return nil, err
@@ -46,7 +50,7 @@ func (g *SubtitleGenerator) Generate() (*types.SubtitleData, error) {
 		response = strings.Trim(response, "\"")
 		response = strings.Trim(response, "'")
 
-		resultText := g.Template
+		resultText := g.Config.Template
 		resultText = strings.ReplaceAll(resultText, "{TEXT}", entry.Text)
 		resultText = strings.ReplaceAll(resultText, "{GENERATED_TEXT}", response)
 
@@ -57,7 +61,7 @@ func (g *SubtitleGenerator) Generate() (*types.SubtitleData, error) {
 			Text:  resultText,
 		})
 
-		if g.Debug {
+		if g.Config.Debug {
 			fmt.Printf("Index: %d / %d\n", entry.Index, total)
 			fmt.Printf("Prompt:\n%s\n", prompt)
 			fmt.Printf("Response:\n%s\n", response)

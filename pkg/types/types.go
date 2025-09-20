@@ -5,6 +5,24 @@ import (
 	"time"
 )
 
+type GeneratorConfig struct {
+	HostUrl      string
+	Model        string
+	PropertyName string
+	SystemPrompt string
+	Prompt       string
+	Template     string
+	Debug        bool
+}
+
+// PromptConfig represents a prompt request
+type PromptRequest struct {
+	Model        string
+	SystemPrompt string
+	Prompt       string
+	PropertyName string
+}
+
 type SubtitleEntry struct {
 	Index int
 	Start time.Duration
@@ -25,5 +43,5 @@ type SubtitleWriter interface {
 }
 
 type Brain interface {
-	GenerateString(ctx context.Context, propertyName, prompt string) (string, error)
+	GenerateString(ctx context.Context, r *PromptRequest) (string, error)
 }
