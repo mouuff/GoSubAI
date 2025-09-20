@@ -65,10 +65,13 @@ The following configuration will include the original text as well as the transl
 
 ```json
 {
-  "Model": "mistral",
+  "HostUrl": "default",
+  "Model": "deepseek-r1:8b",
   "PropertyName": "translated_text",
-  "Prompt": "Translate this to english and keep it short: '{TEXT}'",
-  "Template": "{TEXT}\n----\n{GENERATED_TEXT}"
+  "SystemPrompt": "You are a subtitle translation assistant. Your only task is to translate subtitles into the target language specified by the user. Subtitles may contain incomplete sentences-when that happens, translate them literally without trying to complete or alter their meaning. Always keep the translation faithful to the original text and do not add explanations or extra words.",
+  "Prompt": "Translate this to english: '{TEXT}'",
+  "Template": "{TEXT}\n----\n{GENERATED_TEXT}",
+  "Debug": true
 }
 ```
 
@@ -79,9 +82,12 @@ Here’s an example configuration that does this:
 
 ```json
 {
+  "HostUrl": "default",
   "Model": "deepseek-r1:8b",
   "PropertyName": "translated_text",
-  "Prompt": "Consider the previous text for context ONLY: '{PREVIOUS_TEXT} {TEXT}'. Translate this to english and keep it short, and don't include the context in your response: '{TEXT}'",
-  "Template": "{GENERATED_TEXT}"
+  "SystemPrompt": "Input format: `Context: {PREVIOUS_TEXT} {TEXT}` `Task: Translate {TEXT} to English, short and clear.` Rules: Use {PREVIOUS_TEXT} only as context. Output only the translation of {TEXT}. No explanations, no context, no extra words.",
+  "Prompt": "Context: '{PREVIOUS_TEXT} {TEXT}'\nTask: Translate '{TEXT}' to English, short and clear.",
+  "Template": "{TEXT}\n----\n{GENERATED_TEXT}",
+  "Debug": true
 }
 ```
