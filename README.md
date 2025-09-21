@@ -66,7 +66,7 @@ The following configuration will include the original text as well as the transl
 ```json
 {
   "HostUrl": "default",
-  "Model": "deepseek-r1:8b",
+  "Model": "mistral",
   "PropertyName": "translated_text",
   "SystemPrompt": "You are a subtitle translation assistant. Your only task is to translate subtitles into the target language specified by the user. Subtitles may contain incomplete sentences-when that happens, translate them literally without trying to complete or alter their meaning. Always keep the translation faithful to the original text and do not add explanations or extra words.",
   "Prompt": "Translate this to english: '{TEXT}'",
