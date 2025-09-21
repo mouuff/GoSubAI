@@ -53,6 +53,12 @@ Try running this example command from the root of the repository:
 go run ./cmd/GoSubAI generate -config ./config/translate_to_eng.json -input ./data/HVOR_BLIR_DET_AV_PENGA.srt
 ```
 
+You can also try this setup, which includes context in the translation and often leads to better results:
+
+```sh
+go run ./cmd/GoSubAI generate -config ./config/translate_to_eng_with_context.json -input ./data/HVOR_BLIR_DET_AV_PENGA.srt
+```
+
 ### Run Unit Tests
 
 To run unit tests, use the following command:
