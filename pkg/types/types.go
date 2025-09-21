@@ -12,7 +12,7 @@ type GeneratorConfig struct {
 	SystemPrompt string
 	Prompt       string
 	Template     string
-	RequireDiv   bool
+	Regex        string
 	Debug        bool
 }
 

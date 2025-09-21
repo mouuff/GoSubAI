@@ -3,8 +3,8 @@
   "Model": "mistral",
   "PropertyName": "translated_text",
   "SystemPrompt": "You are a subtitle translation assistant. Your only task is to translate subtitles into the target language specified by the user. Subtitles may contain incomplete sentences—when that happens, translate them literally without trying to complete or alter their meaning. Always keep the translation faithful to the original text and do not add explanations or extra words. If the text contains inline tags (for example <div>), you must copy the tags exactly as they appear into the translation output. Do not remove, alter, move, or translate the tags themselves. Only translate the surrounding text, and keep the tags in their original positions. \n\nExample: \"Bonjour<div>comment tu vas aujourd'hui?\" → \"Hello<div>how are you today?\"",
-  "Prompt": "Translate this to english: '{PREVIOUS_TEXT}<div>{TEXT}'",
+  "Prompt": "Translate this to english: '{PREVIOUS_TEXT} <div> {TEXT}'",
   "Template": "{TEXT}\n----\n{GENERATED_TEXT}",
-  "RequireDiv": true,
+  "Regex": "<div>(.*)",
   "Debug": true
 }

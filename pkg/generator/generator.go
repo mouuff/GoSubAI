@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
+	"regexp"
 
 	"github.com/mouuff/GoSubAI/pkg/types"
 )
@@ -19,7 +19,7 @@ type SubtitleGenerator struct {
 }
 
 func (g *SubtitleGenerator) GenerateSingle(r *types.PromptRequest) (string, error) {
-	if !g.Config.RequireDiv {
+	if g.Config.Regex == "" {
 		return g.Brain.GenerateString(g.Context, r)
 	}
 
@@ -32,16 +32,18 @@ func (g *SubtitleGenerator) GenerateSingle(r *types.PromptRequest) (string, erro
 			return "", err
 		}
 
-		if strings.Contains(generatedText, "<div>") {
-			return generatedText, nil
+		re := regexp.MustCompile(g.Config.Regex)
+		matches := re.FindStringSubmatch(generatedText)
+
+		if len(matches) == 2 {
+			return matches[1], nil
 		} else {
-			log.Println("RequireDiv: No <div> found, retrying...")
+			log.Printf("GenerateSingle: could not match regex '%s'", g.Config.Regex)
 		}
 
 		if attempts >= maxAttempts {
-			return "", fmt.Errorf("RequireDiv: reached max attempts %d", maxAttempts)
+			return "", fmt.Errorf("GenerateSingle: reached max attempts %d", maxAttempts)
 		}
-
 		attempts += 1
 	}
 }
