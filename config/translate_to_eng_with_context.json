@@ -1,6 +1,6 @@
 {
   "HostUrl": "default",
-  "Model": "deepseek-r1:8b",
+  "Model": "mistral",
   "PropertyName": "translated_text",
   "SystemPrompt": "Input format: `Context: {PREVIOUS_TEXT} {TEXT}` `Task: Translate {TEXT} to English, short and clear.` Rules: Use {PREVIOUS_TEXT} only as context. Output only the translation of {TEXT}. No explanations, no context, no extra words.",
   "Prompt": "Context: '{PREVIOUS_TEXT} {TEXT}'\nTask: Translate '{TEXT}' to English, short and clear.",
