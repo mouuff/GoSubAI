@@ -12,6 +12,7 @@ For instance, you can ask for more literal translations.
 - **Configurable Automation**: Define your own prompts to process subtitles.
 - **Context aware**: You have the ability to create prompts that consider previous title sentences for a more coherent translation.
 - **Modularity**: Choose your preferred AI model.
+- **Remote and local**: You have the option to run the LLM either on your local device or remotely hosted.
 - **SRT support**: Easily import & export subtitles to SRT format.
 
 ## Project Status
