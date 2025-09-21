@@ -6,6 +6,6 @@
   "Prompt": "Translate this to english: '{PREVIOUS_TEXT} ##TAG## {TEXT}'",
   "Template": "{TEXT}\n----\n{GENERATED_TEXT}",
   "Regex": "##TAG##(.*)",
-  "RePromptLimit": 25,
+  "RegexRetryLimit": 25,
   "Debug": true
 }

@@ -40,8 +40,8 @@ func (g *SubtitleGenerator) GenerateSingle(r *types.PromptRequest) (string, erro
 			log.Printf("GenerateSingle: could not match regex '%s'", g.Config.Regex)
 		}
 
-		if attempts >= g.Config.RePromptLimit {
-			log.Printf("GenerateSingle: reached max attempts %d", g.Config.RePromptLimit)
+		if attempts >= g.Config.RegexRetryLimit {
+			log.Printf("GenerateSingle: reached max attempts %d", g.Config.RegexRetryLimit)
 			return generatedText, nil
 		}
 

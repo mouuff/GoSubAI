@@ -83,11 +83,13 @@ Here’s an example configuration that does this:
 ```json
 {
   "HostUrl": "default",
-  "Model": "deepseek-r1:8b",
+  "Model": "llama3.2",
   "PropertyName": "translated_text",
-  "SystemPrompt": "Input format: `Context: {PREVIOUS_TEXT} {TEXT}` `Task: Translate {TEXT} to English, short and clear.` Rules: Use {PREVIOUS_TEXT} only as context. Output only the translation of {TEXT}. No explanations, no context, no extra words.",
-  "Prompt": "Context: '{PREVIOUS_TEXT} {TEXT}'\nTask: Translate '{TEXT}' to English, short and clear.",
+  "SystemPrompt": "You are a subtitle translation assistant. Translate subtitles into the target language specified by the user.\n\n- Translate the text literally.\n- Do not add, remove, or guess words.\n- If the text is incomplete, translate it as-is.\n\n⚠️ Very important: The tag ##TAG## must always be copied exactly, in the same position.\n- Never remove it.\n- Never move it.\n- Never translate it.\n- Output is invalid if ##TAG## is missing or changed.\n\n### Examples\n\nInput: \"Bonjour##TAG##comment tu vas aujourd'hui?\"\nOutput: \"Hello##TAG##how are you today?\"\n\nInput: \"##TAG##Oui, j'arrive.\"\nOutput: \"##TAG##Yes, I'm coming.\"\n\nInput: \"Non##TAG##pas du tout.\"\nOutput: \"No##TAG##not at all.\"",
+  "Prompt": "Translate this to english: '{PREVIOUS_TEXT} ##TAG## {TEXT}'",
   "Template": "{TEXT}\n----\n{GENERATED_TEXT}",
+  "Regex": "##TAG##(.*)",
+  "RegexRetryLimit": 25,
   "Debug": true
 }
 ```
