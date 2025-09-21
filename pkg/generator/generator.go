@@ -24,11 +24,11 @@ type ReplacementValues struct {
 	GeneratedText string
 }
 
-func trimGeneratedText(response string) string {
-	response = strings.TrimSpace(response)
-	response = strings.Trim(response, "\"")
-	response = strings.Trim(response, "'")
-	return response
+func trimGeneratedText(s string) string {
+	s = strings.TrimSpace(s)
+	s = strings.Trim(s, "\"")
+	s = strings.Trim(s, "'")
+	return s
 }
 
 func (v *ReplacementValues) ReplaceAll(s string) string {
