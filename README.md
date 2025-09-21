@@ -10,6 +10,7 @@ For instance, you can ask for more literal translations.
 
 ### Features:
 - **Configurable Automation**: Define your own prompts to process subtitles.
+- **Context aware**: You have the ability to create prompts that consider previous title sentences for a more coherent translation.
 - **Modularity**: Choose your preferred AI model.
 - **SRT support**: Easily import & export subtitles to SRT format.
 
@@ -45,7 +46,7 @@ ollama serve
 To produce subtitles, it's essential to specify a configuration that outlines the process to be executed on the subtitle files.
 Additionally, provide a SubRip (SRT) file containing the subtitles.
 
-Example:
+Try running this example command from the root of the repository:
 
 ```sh
 go run ./cmd/GoSubAI generate -config ./config/translate_to_eng.json -input ./data/HVOR_BLIR_DET_AV_PENGA.srt
