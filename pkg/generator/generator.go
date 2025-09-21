@@ -3,6 +3,8 @@ package generator
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
 
 	"github.com/mouuff/GoSubAI/pkg/types"
 )
@@ -14,6 +16,34 @@ type SubtitleGenerator struct {
 	Brain         types.Brain
 	SubstitleData *types.SubtitleData
 	Config        *types.GeneratorConfig
+}
+
+func (g *SubtitleGenerator) GenerateSingle(r *types.PromptRequest) (string, error) {
+	if !g.Config.RequireDiv {
+		return g.Brain.GenerateString(g.Context, r)
+	}
+
+	maxAttempts := 10 // maximum number of iterations to prevent infinite loop
+	attempts := 0
+	for {
+		generatedText, err := g.Brain.GenerateString(g.Context, r)
+
+		if err != nil {
+			return "", err
+		}
+
+		if strings.Contains(generatedText, "<div>") {
+			return generatedText, nil
+		} else {
+			log.Println("RequireDiv: No <div> found, retrying...")
+		}
+
+		if attempts >= maxAttempts {
+			return "", fmt.Errorf("RequireDiv: reached max attempts %d", maxAttempts)
+		}
+
+		attempts += 1
+	}
 }
 
 func (g *SubtitleGenerator) Generate() (*types.SubtitleData, error) {
@@ -39,8 +69,7 @@ func (g *SubtitleGenerator) Generate() (*types.SubtitleData, error) {
 			Prompt:       v.ReplaceAll(g.Config.Prompt),
 		}
 
-		v.GeneratedText, err = g.Brain.GenerateString(g.Context, r)
-
+		v.GeneratedText, err = g.GenerateSingle(r)
 		if err != nil {
 			return nil, err
 		}

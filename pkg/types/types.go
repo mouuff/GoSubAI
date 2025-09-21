@@ -12,6 +12,7 @@ type GeneratorConfig struct {
 	SystemPrompt string
 	Prompt       string
 	Template     string
+	RequireDiv   bool
 	Debug        bool
 }
 
