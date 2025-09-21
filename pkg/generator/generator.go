@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/mouuff/GoSubAI/internal/constants"
 	"github.com/mouuff/GoSubAI/pkg/types"
 )
 
@@ -17,6 +18,26 @@ type SubtitleGenerator struct {
 	Config        *types.GeneratorConfig
 }
 
+type ReplacementValues struct {
+	Text          string
+	PreviousText  string
+	GeneratedText string
+}
+
+func trimGeneratedText(response string) string {
+	response = strings.TrimSpace(response)
+	response = strings.Trim(response, "\"")
+	response = strings.Trim(response, "'")
+	return response
+}
+
+func (v *ReplacementValues) ReplaceAll(s string) string {
+	s = strings.ReplaceAll(s, constants.PlaceholderText, v.Text)
+	s = strings.ReplaceAll(s, constants.PlaceholderPreviousText, v.PreviousText)
+	s = strings.ReplaceAll(s, constants.PlaceholderGeneratedText, trimGeneratedText(v.GeneratedText))
+	return s
+}
+
 func (g *SubtitleGenerator) Generate() (*types.SubtitleData, error) {
 	resultSubtitleData := &types.SubtitleData{
 		Entries: []types.SubtitleEntry{},
@@ -26,46 +47,40 @@ func (g *SubtitleGenerator) Generate() (*types.SubtitleData, error) {
 	var previousText string
 
 	for _, entry := range g.SubstitleData.Entries {
-		prompt := strings.ReplaceAll(g.Config.Prompt, "{TEXT}", entry.Text)
+		var err error
 
-		if previousText != "" {
-			// Can be used to provide context from previous subtitle for better translations
-			prompt = strings.ReplaceAll(prompt, "{PREVIOUS_TEXT}", previousText)
+		v := &ReplacementValues{
+			Text:         entry.Text,
+			PreviousText: previousText,
 		}
 
 		r := &types.PromptRequest{
 			PropertyName: g.Config.PropertyName,
 			SystemPrompt: g.Config.SystemPrompt,
 			Model:        g.Config.Model,
-			Prompt:       prompt,
+			Prompt:       v.ReplaceAll(g.Config.Prompt),
 		}
 
-		response, err := g.Brain.GenerateString(g.Context, r)
+		v.GeneratedText, err = g.Brain.GenerateString(g.Context, r)
 
 		if err != nil {
 			return nil, err
 		}
 
-		response = strings.TrimSpace(response)
-		response = strings.Trim(response, "\"")
-		response = strings.Trim(response, "'")
-
-		resultText := g.Config.Template
-		resultText = strings.ReplaceAll(resultText, "{TEXT}", entry.Text)
-		resultText = strings.ReplaceAll(resultText, "{GENERATED_TEXT}", response)
-
-		resultSubtitleData.Entries = append(resultSubtitleData.Entries, types.SubtitleEntry{
+		subtitleEntry := types.SubtitleEntry{
 			Index: entry.Index,
 			Start: entry.Start,
 			End:   entry.End,
-			Text:  resultText,
-		})
+			Text:  v.ReplaceAll(g.Config.Template),
+		}
+
+		resultSubtitleData.Entries = append(resultSubtitleData.Entries, subtitleEntry)
 
 		if g.Config.Debug {
 			fmt.Printf("Index: %d / %d\n", entry.Index, total)
-			fmt.Printf("Prompt:\n%s\n", prompt)
-			fmt.Printf("Response:\n%s\n", response)
-			fmt.Printf("ResultText:\n%s\n", resultText)
+			fmt.Printf("Prompt:\n%s\n", r.Prompt)
+			fmt.Printf("Response:\n%s\n", v.GeneratedText)
+			fmt.Printf("ResultText:\n%s\n", subtitleEntry.Text)
 			fmt.Printf("************************\n")
 		}
 
