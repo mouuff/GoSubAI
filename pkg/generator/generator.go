@@ -23,7 +23,6 @@ func (g *SubtitleGenerator) GenerateSingle(r *types.PromptRequest) (string, erro
 		return g.Brain.GenerateString(g.Context, r)
 	}
 
-	maxAttempts := 10 // maximum number of iterations to prevent infinite loop
 	attempts := 0
 	for {
 		generatedText, err := g.Brain.GenerateString(g.Context, r)
@@ -41,9 +40,11 @@ func (g *SubtitleGenerator) GenerateSingle(r *types.PromptRequest) (string, erro
 			log.Printf("GenerateSingle: could not match regex '%s'", g.Config.Regex)
 		}
 
-		if attempts >= maxAttempts {
-			return "", fmt.Errorf("GenerateSingle: reached max attempts %d", maxAttempts)
+		if attempts >= g.Config.RePromptLimit {
+			log.Printf("GenerateSingle: reached max attempts %d", g.Config.RePromptLimit)
+			return generatedText, nil
 		}
+
 		attempts += 1
 	}
 }

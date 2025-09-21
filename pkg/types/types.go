@@ -6,14 +6,15 @@ import (
 )
 
 type GeneratorConfig struct {
-	HostUrl      string
-	Model        string
-	PropertyName string
-	SystemPrompt string
-	Prompt       string
-	Template     string
-	Regex        string
-	Debug        bool
+	HostUrl       string
+	Model         string
+	PropertyName  string
+	SystemPrompt  string
+	Prompt        string
+	Template      string
+	Regex         string
+	RePromptLimit int
+	Debug         bool
 }
 
 // PromptConfig represents a prompt request
